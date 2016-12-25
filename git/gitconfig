@@ -1,0 +1,14 @@
+[user]
+name = parallellink
+email = parallellink@outlook.com
+
+[alias]
+st = status
+co = checkout
+br = branch
+rb = rebase
+ci = commit
+df = diff
+
+[core]
+editor = emacs
