@@ -53,7 +53,7 @@
   mouse-yank-at-point t
   show-trailing-whitespace t
   truncate-lines nil
-  x-select-enable-clipboard t
+  select-enable-clipboard t
   inhibit-startup-message t
   global-linum-mode t
   linum-format "%4d ")
