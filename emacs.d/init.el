@@ -45,6 +45,7 @@
 
 (global-set-key (kbd "<f5>") 'eval-buffer)
 
+(menu-bar-mode -1)
 (setq-default
   column-number-mode -1
   indent-tabs-mode nil
@@ -53,8 +54,6 @@
   show-trailing-whitespace t
   truncate-lines nil
   x-select-enable-clipboard t
-  interprogram-paste-function 'x-selection-value
-  interprogram-cut-function 'paste-to-osx  ;; TODO: switch-case for ubuntu & mac 
   inhibit-startup-message t
   global-linum-mode t
   linum-format "%4d ")
