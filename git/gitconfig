@@ -1,14 +1,21 @@
-[user]
-name = parallellink
-email = parallellink@outlook.com
-
+[include]
+	path = ~/.gitconfig.local
 [alias]
-st = status
-co = checkout
-br = branch
-rb = rebase
-ci = commit
-df = diff
-
+	df = diff
+	st = status
+	co = checkout
+	ci = commit -v
+	br = branch
+        l0 = "!git --no-pager log --oneline"
+	l1 = "!git --no-pager log -1 HEAD"
+        r2 = "!git rebase -i HEAD~2"
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[push]
+	default = simple
 [core]
-editor = emacs
+	autocrlf = input
+        safecrlf = false
+	editor = /usr/bin/vim
