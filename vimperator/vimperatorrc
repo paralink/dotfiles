@@ -1,0 +1,28 @@
+noremap j 5<C-e>
+noremap k 5<C-y>
+
+map h <C-PageUp>
+map l <C-PageDown>
+
+noremap <C-a> i<C-a>
+inoremap <C-a> <insert><C-a><insert>
+
+set ignorecase
+set smartcase
+
+set defsearch=google
+nnoremap s :tabopen<Space>google<Space>
+
+set complete=sl
+
+
+"=======================================================
+" use go<key> to quickly open a bookmark
+
+" qmarks
+:qmark p https://www.github.com/parallellink
+
+"=======================================================
+
+
+noremap <C-p> :winopen -private<CR>
