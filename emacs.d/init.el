@@ -1,132 +1,123 @@
-;; --------------------------------
-;;  ALWAYS Read the Document First
-;; --------------------------------
-;;
-;;     "C-h f" = read function doc
-;;     "C-h v" = read variable doc
-;;     "C-h k" = describe key
-;;
-;; ------------
-;;  References
-;; ------------
-;;
-;;     "when to use 0/1/t/nil" -> http://emacs.stackexchange.com/a/2449
-;;
-;; ---------
-;;  Actions
-;; ---------
-;;
-;;     "M-x save-buffers-kill-emacs" -> entirely close a server started with "--daemon"   ;; TODO: bind a key with "y/n" confirmation
-;;
-;; ------
-;;  TODO
-;; ------
-;;     * key bind for `magit-status`
-;;
-;;
-;; --------
-;;  ISSUES
-;; --------
-;;
-;;     Delay between ESC & modeswitch : http://bitbucket.org/lyro/evil/issues/69/delay-between-esc-or-c-and-modeswitch
-;;                                      Solved by adding "set -s escape-time 0" in ~/.tmux.conf
+;;; init.el -- My Emacs configuration
+;-*-Emacs-Lisp-*-
 
+;;; Commentary:
+;;
+;;; Code:
 
+;;===========================
+;; Bootstrap
+;;===========================
 (require 'package)
-
+(setq package-enable-at-startup nil)
 (setq package-archives '(("melpa-stable" . "https://stable.melpa.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
-
 (package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
 
 ;;===========================
 ;; Global settings
 ;;===========================
+(setq-default
+  inhibit-startup-message t
+  column-number-mode t
+  indent-tabs-mode nil
+  show-trailing-whitespace t
+  truncate-lines nil
+  linum-format "%4d  ")
+
+(menu-bar-mode -1)
+(show-paren-mode)
+(global-linum-mode)
+(load-theme 'wombat)
+(set-face-foreground 'minibuffer-prompt "red")
 
 (global-set-key (kbd "<f5>") 'eval-buffer)
 
-(menu-bar-mode -1)
-(setq-default
-  column-number-mode -1
-  indent-tabs-mode nil
-  make-backup-files nil
-  mouse-yank-at-point t
-  show-trailing-whitespace t
-  truncate-lines nil
-  select-enable-clipboard t
-  inhibit-startup-message t
-  global-linum-mode t
-  linum-format "%4d ")
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
 ;;===========================
 ;; Packages
 ;;===========================
+(use-package diminish)
 
-;--------------------
-; ido-mode
-;--------------------
+(use-package smex
+  :ensure t
+  :bind (("M-x" . smex)
+         ("M-X" . smex-major-mode-commands)
+         ("C-c C-c M-x" . execute-extended-command)))
+
 (use-package ido
-  :config
-  (ido-mode 1)
-  (ido-everywhere 1)
-  (setq ido-enable-flex-matching 1)
-  (setq ido-use-filename-at-point 1)
-  (setq ido-auto-merge-work-directories-length 0)
-  (setq ido-use-virtual-buffers 1))
-
-;--------------------
-; evil
-;--------------------
+  :config (ido-mode 1)
+          (ido-everywhere 1)
+          (setq ido-enable-flex-matching 1
+                ido-use-filename-at-point 1
+                ido-auto-merge-work-directories-length 0
+                ido-use-virtual-buffers 1))
 
 ; https://bytebucket.org/lyro/evil/raw/default/doc/evil.pdf
 (use-package evil
   :ensure t
-  :config
-  (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
-  (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
+  :config (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
+          (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
+          (evil-mode 1)
 
-  ;; http://stackoverflow.com/questions/27480231/emacs-evil-mode-and-ensime
-  (evil-define-key 'normal ensime-mode-map (kbd "C-]") #'ensime-edit-definition)
-  (evil-define-key 'normal ensime-mode-map (kbd "<f5>") #'ensime-sbt-do-run)
-  (evil-define-key 'normal ensime-mode-map (kbd "<f6>") #'ensime-format-source)
+          (use-package evil-leader
+            :ensure t
+            :config (global-evil-leader-mode)
+                    (evil-leader/set-leader ",")
+                    (evil-leader/set-key ":" 'eval-expression
+                                         "g" 'magit-status
+                                         "w" 'save-buffer
+                                         "," 'smex))
 
-  (evil-mode 1)
+          (use-package evil-surround
+            :ensure t
+            :config (global-evil-surround-mode))
 
-  (use-package evil-leader
-    :ensure t
-    :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader ",")
-    (evil-leader/set-key
-      ","  (lambda () (interactive) (ansi-term (getenv "SHELL")))
-      ":" 'eval-expression
-      "g" 'magit-status
-      "w" 'save-buffer
-      "S" 'delete-trailing-whitespace))
+          (use-package evil-indent-textobject
+            :ensure t))
 
-  ; https://github.com/timcharper/evil-surround
-  (use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode))
-
-)
-
-;--------------------
-; magit
-;--------------------
 (use-package magit
   :ensure t)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (magit evil-surround evil-leader evil use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+(use-package flycheck
+  :ensure
+  :init (global-flycheck-mode))
+
+(use-package company
+  :ensure t
+  :config (global-company-mode)
+          (with-eval-after-load 'company
+            (define-key company-active-map (kbd "M-n") nil)
+            (define-key company-active-map (kbd "M-p") nil)
+            (define-key company-active-map (kbd "j") #'company-select-next)
+            (define-key company-active-map (kbd "k") #'company-select-previous)))
+
+(use-package go-mode
+  :ensure t
+  :config (progn (setq gofmt-command "goimports")
+                 (add-hook 'before-save-hook 'gofmt-before-save))
+
+          (use-package company-go
+            :ensure t
+            :config (add-hook 'go-mode-hook (lambda ()
+                                              (set (make-local-variable 'company-backends) '(company-go))
+                                              (company-mode))))
+
+          (use-package go-eldoc
+            :ensure t
+            :config (add-hook 'go-mode-hook 'go-eldoc-setup)))
+
+(provide 'init)
+
+;;; init.el ends here
