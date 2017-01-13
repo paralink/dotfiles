@@ -37,6 +37,7 @@
 (global-linum-mode)
 (load-theme 'wombat)
 (set-face-foreground 'minibuffer-prompt "red")
+(windmove-default-keybindings)
 
 (global-set-key (kbd "<f5>") 'eval-buffer)
 
@@ -56,24 +57,23 @@
          ("M-X" . smex-major-mode-commands)
          ("C-c C-c M-x" . execute-extended-command)))
 
-(use-package ido
-  :config (ido-mode 1)
-          (ido-everywhere 1)
-          (setq ido-enable-flex-matching 1
-                ido-use-filename-at-point 1
-                ido-auto-merge-work-directories-length 0
-                ido-use-virtual-buffers 1))
+(use-package ivy
+  :ensure t
+  :init   (ivy-mode 1)
+          (setq ivy-use-virtual-buffers t)
+  :config (define-key ivy-minibuffer-map (kbd "j") 'ivy-next-line)
+          (define-key ivy-minibuffer-map (kbd "k") 'ivy-previous-line))
 
 ; https://bytebucket.org/lyro/evil/raw/default/doc/evil.pdf
 (use-package evil
   :ensure t
-  :config (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
+  :init   (evil-mode 1)
+          (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
           (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
-          (evil-mode 1)
 
           (use-package evil-leader
             :ensure t
-            :config (global-evil-leader-mode)
+            :init   (global-evil-leader-mode)
                     (evil-leader/set-leader ",")
                     (evil-leader/set-key ":" 'eval-expression
                                          "g" 'magit-status
