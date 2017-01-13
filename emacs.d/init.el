@@ -36,7 +36,7 @@
 (show-paren-mode)
 (global-linum-mode)
 (load-theme 'wombat)
-(set-face-foreground 'minibuffer-prompt "red")
+(set-face-foreground 'minibuffer-prompt "yellow")
 (windmove-default-keybindings)
 
 (global-set-key (kbd "<f5>") 'eval-buffer)
@@ -67,11 +67,7 @@
 ; https://bytebucket.org/lyro/evil/raw/default/doc/evil.pdf
 (use-package evil
   :ensure t
-  :init   (evil-mode 1)
-          (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
-          (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
-
-          (use-package evil-leader
+  :init   (use-package evil-leader
             :ensure t
             :init   (global-evil-leader-mode)
                     (evil-leader/set-leader ",")
@@ -85,7 +81,14 @@
             :config (global-evil-surround-mode))
 
           (use-package evil-indent-textobject
-            :ensure t))
+            :ensure t)
+
+  :config
+          ;; has to this after evil-leader due to https://github.com/cofi/evil-leader/issues/10
+          (evil-mode 1))
+          (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
+          (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
+
 
 (use-package magit
   :ensure t)
@@ -98,10 +101,10 @@
   :ensure t
   :config (global-company-mode)
           (with-eval-after-load 'company
-            (define-key company-active-map (kbd "M-n") nil)
-            (define-key company-active-map (kbd "M-p") nil)
-            (define-key company-active-map (kbd "j") #'company-select-next)
-            (define-key company-active-map (kbd "k") #'company-select-previous)))
+          (define-key company-active-map (kbd "M-n") nil)
+          (define-key company-active-map (kbd "M-p") nil)
+          (define-key company-active-map (kbd "j") #'company-select-next)
+          (define-key company-active-map (kbd "k") #'company-select-previous)))
 
 (use-package go-mode
   :ensure t
