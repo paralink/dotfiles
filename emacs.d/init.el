@@ -49,8 +49,6 @@
 ;;===========================
 ;; Packages
 ;;===========================
-(use-package diminish)
-
 (use-package smex
   :ensure t
   :bind (("M-x" . smex)
@@ -59,35 +57,41 @@
 
 (use-package ivy
   :ensure t
-  :init   (ivy-mode 1)
-          (setq ivy-use-virtual-buffers t)
-  :config (define-key ivy-minibuffer-map (kbd "j") 'ivy-next-line)
-          (define-key ivy-minibuffer-map (kbd "k") 'ivy-previous-line))
+  :init
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+
+  :config
+  (define-key ivy-minibuffer-map (kbd "j") 'ivy-next-line)
+  (define-key ivy-minibuffer-map (kbd "k") 'ivy-previous-line))
 
 ; https://bytebucket.org/lyro/evil/raw/default/doc/evil.pdf
 (use-package evil
   :ensure t
-  :init   (use-package evil-leader
-            :ensure t
-            :init   (global-evil-leader-mode)
-                    (evil-leader/set-leader ",")
-                    (evil-leader/set-key ":" 'eval-expression
-                                         "g" 'magit-status
-                                         "w" 'save-buffer
-                                         "," 'smex))
-
-          (use-package evil-surround
-            :ensure t
-            :config (global-evil-surround-mode))
-
-          (use-package evil-indent-textobject
-            :ensure t)
-
   :config
-          ;; has to this after evil-leader due to https://github.com/cofi/evil-leader/issues/10
-          (evil-mode 1))
-          (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
-          (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line)
+
+  (use-package evil-leader
+    :ensure t
+    :init
+    (global-evil-leader-mode)
+    (evil-leader/set-leader ",")
+    (evil-leader/set-key ":" 'eval-expression
+                         "g" 'magit-status
+                         "w" 'save-buffer
+                         "," 'smex))
+
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode))
+
+  (use-package evil-indent-textobject
+    :ensure t)
+
+  ;; has to this after evil-leader due to https://github.com/cofi/evil-leader/issues/10
+  (evil-mode 1)
+  (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line))
 
 
 (use-package magit
@@ -108,18 +112,35 @@
 
 (use-package go-mode
   :ensure t
-  :config (progn (setq gofmt-command "goimports")
-                 (add-hook 'before-save-hook 'gofmt-before-save))
+  :init
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save)
 
-          (use-package company-go
-            :ensure t
-            :config (add-hook 'go-mode-hook (lambda ()
-                                              (set (make-local-variable 'company-backends) '(company-go))
-                                              (company-mode))))
+  :config
+  (use-package company-go
+    :ensure t
+    :config
+    (add-hook 'go-mode-hook (lambda ()
+                              (set (make-local-variable 'company-backends) '(company-go))
+                              (company-mode))))
 
-          (use-package go-eldoc
-            :ensure t
-            :config (add-hook 'go-mode-hook 'go-eldoc-setup)))
+  (use-package go-eldoc
+    :ensure t
+    :config (add-hook 'go-mode-hook 'go-eldoc-setup))
+
+  (use-package go-rename
+    :ensure t)
+
+  (use-package go-guru
+    :ensure t)
+
+  (evil-leader/set-key-for-mode 'go-mode "d" 'godoc-at-point)
+  (evil-leader/set-key-for-mode 'go-mode "c" 'go-guru-referrers)
+  (evil-leader/set-key-for-mode 'go-mode "rn" 'go-rename))
+
+;(use-package intero
+;  :ensure t
+;  :config (add-hook 'haskell-mode-hook 'intero-mode))
 
 (provide 'init)
 
