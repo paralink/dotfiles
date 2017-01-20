@@ -6,8 +6,7 @@
 ;;; Code:
 
 ;;===========================
-;; Bootstrap
-;;===========================
+;; Bootstrap ;;===========================
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives '(("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -15,8 +14,7 @@
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  (package-refresh-contents) (package-install 'use-package))
 
 (eval-when-compile
   (require 'use-package))
@@ -59,9 +57,9 @@
   :ensure t
   :init
   (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
 
   :config
+  (setq ivy-use-virtual-buffers t)
   (define-key ivy-minibuffer-map (kbd "j") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "k") 'ivy-previous-line))
 
@@ -113,10 +111,10 @@
 (use-package go-mode
   :ensure t
   :init
-  (setq gofmt-command "goimports")
   (add-hook 'before-save-hook 'gofmt-before-save)
 
   :config
+  (setq gofmt-command "goimports")
   (use-package company-go
     :ensure t
     :config
