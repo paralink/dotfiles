@@ -59,9 +59,7 @@
   (ivy-mode 1)
 
   :config
-  (setq ivy-use-virtual-buffers t)
-  (define-key ivy-minibuffer-map (kbd "j") 'ivy-next-line)
-  (define-key ivy-minibuffer-map (kbd "k") 'ivy-previous-line))
+  (setq ivy-use-virtual-buffers t))
 
 ; https://bytebucket.org/lyro/evil/raw/default/doc/evil.pdf
 (use-package evil
@@ -139,6 +137,9 @@
 ;(use-package intero
 ;  :ensure t
 ;  :config (add-hook 'haskell-mode-hook 'intero-mode))
+
+(use-package projectile
+  :ensure t)
 
 (provide 'init)
 
