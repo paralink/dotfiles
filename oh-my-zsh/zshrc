@@ -12,8 +12,8 @@ export LANG=en_US.UTF-8
 
 export PATH=$HOME/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-if [ -d $HOME/.zshrc.d ]; then
-  for file in $HOME/.zshrc.d/*; do
+if [ -d $HOME/.shrc.d ]; then
+  for file in $HOME/.shrc.d/*; do
     source $file
   done
 fi
