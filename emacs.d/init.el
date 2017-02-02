@@ -6,7 +6,8 @@
 ;;; Code:
 
 ;;===========================
-;; Bootstrap ;;===========================
+;; Bootstrap
+;;===========================
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives '(("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -61,6 +62,10 @@
   :config
   (setq ivy-use-virtual-buffers t))
 
+
+; http://stackoverflow.com/a/22922161/241660
+(setq evil-want-C-i-jump nil)
+
 ; https://bytebucket.org/lyro/evil/raw/default/doc/evil.pdf
 (use-package evil
   :ensure t
@@ -88,7 +93,6 @@
   (evil-mode 1)
   (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "<up>")   'evil-previous-visual-line))
-
 
 (use-package magit
   :ensure t)
